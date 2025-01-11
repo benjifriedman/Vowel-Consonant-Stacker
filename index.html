@@ -28,6 +28,7 @@
 		</style>
 	</head>
 	<body>
+		<h1 style="font-family: sans-serif; font-size: 18px">Vowel Consonant Stacker</h1>
 		<input type="text" id="inputText" placeholder="Enter text" />
 		<button onclick="processText()">Run</button>
 		<div class="output-container">
@@ -36,10 +37,7 @@
 
 		<script>
 			function processText() {
-				const input = document
-					.getElementById('inputText')
-					.value.toLowerCase()
-					.replace(/[^a-z0-9\s]/g, '');
+				const input = document.getElementById('inputText').value.replace(/[^a-zA-Z0-9\s]/g, '');
 
 				const outputContainer = document.querySelector('.output-container');
 				outputContainer.innerHTML = '';
@@ -70,13 +68,13 @@
 							consonants += char;
 							vowels += ' ';
 							i++;
-						} else if (/[aeiou]/.test(char)) {
+						} else if (/[aeiouAEIOU]/.test(char)) {
 							consonants += ' ';
 							vowels += char;
 							i++;
-						} else if (/[a-z]/.test(char)) {
+						} else if (/[a-zA-Z]/.test(char)) {
 							consonants += char;
-							if (i + 1 < word.length && /[aeiou]/.test(word[i + 1])) {
+							if (i + 1 < word.length && /[aeiouAEIOU]/.test(word[i + 1])) {
 								vowels += word[i + 1];
 								i += 2;
 							} else {
