@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vowel Consonant Rows</title>
+		<style>
+			.output-container {
+				font-family: monospace;
+				font-size: 24px;
+				margin-top: 20px;
+				width: 100%;
+				max-width: 1200px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 40px;
+			}
+			.pair-container {
+				display: flex;
+				flex-direction: column;
+			}
+			pre {
+				margin: 0;
+				font-family: monospace;
+				font-size: 24px;
+				letter-spacing: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="text" id="inputText" placeholder="Enter text" />
+		<button onclick="processText()">Run</button>
+		<div class="output-container">
+			<!-- Pairs will be dynamically inserted here -->
+		</div>
+
+		<script>
+			function processText() {
+				const input = document
+					.getElementById('inputText')
+					.value.toLowerCase()
+					.replace(/[^a-z0-9\s]/g, '');
+
+				const outputContainer = document.querySelector('.output-container');
+				outputContainer.innerHTML = '';
+
+				const charsPerLine = 40;
+				let i = 0;
+				const words = input.split(' ');
+				let currentLine = { consonants: '', vowels: '', length: 0 };
+
+				function createPairContainer(cons, vows) {
+					const pairContainer = document.createElement('div');
+					pairContainer.className = 'pair-container';
+					const preElement = document.createElement('pre');
+					preElement.textContent = `${cons}\n${vows}`;
+					pairContainer.appendChild(preElement);
+					return pairContainer;
+				}
+
+				function processWord(word) {
+					let consonants = '';
+					let vowels = '';
+					let i = 0;
+
+					while (i < word.length) {
+						let char = word[i];
+
+						if (/[0-9]/.test(char)) {
+							consonants += char;
+							vowels += ' ';
+							i++;
+						} else if (/[aeiou]/.test(char)) {
+							consonants += ' ';
+							vowels += char;
+							i++;
+						} else if (/[a-z]/.test(char)) {
+							consonants += char;
+							if (i + 1 < word.length && /[aeiou]/.test(word[i + 1])) {
+								vowels += word[i + 1];
+								i += 2;
+							} else {
+								vowels += ' ';
+								i++;
+							}
+						} else {
+							i++;
+						}
+					}
+
+					return { consonants, vowels, length: consonants.length };
+				}
+
+				for (let word of words) {
+					const processed = processWord(word);
+
+					// Check if adding this word would exceed line length
+					if (currentLine.length + processed.length + 1 > charsPerLine && currentLine.length > 0) {
+						// Output current line
+						outputContainer.appendChild(createPairContainer(currentLine.consonants.trimEnd(), currentLine.vowels.trimEnd()));
+
+						// Start new line with this word
+						currentLine = {
+							consonants: processed.consonants,
+							vowels: processed.vowels,
+							length: processed.length
+						};
+					} else {
+						// Add word to current line
+						if (currentLine.length > 0) {
+							currentLine.consonants += ' ' + processed.consonants;
+							currentLine.vowels += ' ' + processed.vowels;
+							currentLine.length += processed.length + 1;
+						} else {
+							currentLine = {
+								consonants: processed.consonants,
+								vowels: processed.vowels,
+								length: processed.length
+							};
+						}
+					}
+				}
+
+				// Output final line if it has content
+				if (currentLine.length > 0) {
+					outputContainer.appendChild(createPairContainer(currentLine.consonants.trimEnd(), currentLine.vowels.trimEnd()));
+				}
+			}
+		</script>
+	</body>
+</html>
