@@ -1,6 +1,6 @@
 # Vowel Consonant Stacker
 
-A simple web tool that displays text with consonants and vowels vertically aligned, inspired by Hebrew's niqqud system of vowel marking.
+A simple web tool that displays text with consonants and vowels vertically aligned, inspired by [abjad writing systems](https://en.wikipedia.org/wiki/Abjad) such as Hebrew and Arabic
 
 ## Description
 
